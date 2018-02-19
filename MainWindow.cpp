@@ -15,12 +15,14 @@ public:
         MainWindow::setupUi(w);
         T.matrix().setZero();
         zoomValue = zoomDefaultValue = zoomSlider->value();
+        rotationValue = rotationDefaultValue = rotationSlider->value();
     }
 
     QPointF pos;
     Eigen::Affine3f T;
 
     int zoomValue, zoomDefaultValue;
+    int rotationValue, rotationDefaultValue;
 };
 
 MainWindow::MainWindow(bool orth)
@@ -37,6 +39,12 @@ MainWindow::MainWindow(bool orth)
         if (this->orth) ui->T.linear() *= std::exp(dv * 0.04f);
         else ui->T.translation() += Vector3f(0, 0, dv * 0.1f);
         ui->zoomValue = value;
+        update();
+    });
+
+    connect(ui->rotationSlider, &QSlider::valueChanged, [this](int value) {
+        ui->T.linear() = AngleAxisf((ui->rotationValue - value) * 0.1f, Vector3f::UnitZ()) * ui->T.linear();
+        ui->rotationValue = value;
         update();
     });
 }
@@ -63,6 +71,10 @@ void MainWindow::initializeGL()
     {
         auto _ = QSignalBlocker(ui->zoomSlider);
         ui->zoomSlider->setValue(ui->zoomDefaultValue);
+    }
+    {
+        auto _ = QSignalBlocker(ui->rotationSlider);
+        ui->rotationSlider->setValue(ui->rotationDefaultValue);
     }
 }
 

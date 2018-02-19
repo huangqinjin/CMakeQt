@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <QtGui>
 #include <QDebug>
+#include <QSignalBlocker>
 #include <Eigen/Geometry>
 #include "ui_MainWindow.h"
 
@@ -9,21 +10,33 @@ using namespace Eigen;
 class MainWindow::UI : public Ui::MainWindow
 {
 public:
-    UI()
+    void setupUi(::MainWindow* w)
     {
+        MainWindow::setupUi(w);
         T.matrix().setZero();
+        zoomValue = zoomDefaultValue = zoomSlider->value();
     }
 
     QPointF pos;
     Eigen::Affine3f T;
+
+    int zoomValue, zoomDefaultValue;
 };
 
-MainWindow::MainWindow()
-    : ui(new UI)
+MainWindow::MainWindow(bool orth)
+    : orth(orth), ui(new UI)
 {
     ui->setupUi(this);
     connect(ui->resetButton, &QPushButton::clicked, [this] {
         initializeGL();
+        update();
+    });
+
+    connect(ui->zoomSlider, &QSlider::valueChanged, [this](int value) {
+        int dv = value - ui->zoomValue;
+        if (this->orth) ui->T.linear() *= std::exp(dv * 0.04f);
+        else ui->T.translation() += Vector3f(0, 0, dv * 0.1f);
+        ui->zoomValue = value;
         update();
     });
 }
@@ -40,7 +53,6 @@ void MainWindow::initializeGL()
     glShadeModel(GL_SMOOTH);
     if (!ui->T(3, 3)) glEnable(GL_DEPTH_TEST);
 
-    const bool orth = true;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     if (orth) glOrtho(-1, 1, -1, 1, 1, 3 /* -1 */);
@@ -48,6 +60,10 @@ void MainWindow::initializeGL()
     glMatrixMode(GL_MODELVIEW);
 
     ui->T = Translation3f(0, 0, -2.f);
+    {
+        auto _ = QSignalBlocker(ui->zoomSlider);
+        ui->zoomSlider->setValue(ui->zoomDefaultValue);
+    }
 }
 
 void MainWindow::resizeGL(int w, int h)

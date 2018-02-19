@@ -7,7 +7,7 @@ class MainWindow : public QOpenGLWidget,
 	Q_OBJECT
 
 public:
-	MainWindow();
+	explicit MainWindow(bool orth = true);
     ~MainWindow();
 
 protected:
@@ -23,6 +23,8 @@ protected:
     void wheelEvent(QWheelEvent* e) override;
 
 private:
+    const bool orth;
+
     class UI;
     const std::unique_ptr<UI> ui;
 };

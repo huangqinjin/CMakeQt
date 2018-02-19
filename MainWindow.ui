@@ -49,6 +49,9 @@
         </property>
        </widget>
        <widget class="QSlider" name="zoomSlider">
+        <property name="value">
+         <number>50</number>
+        </property>
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
         </property>

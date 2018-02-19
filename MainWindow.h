@@ -1,6 +1,5 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions_3_3_Compatibility>
-#include <Eigen/Geometry>
 
 class MainWindow : public QOpenGLWidget,
 				   protected QOpenGLFunctions_3_3_Compatibility
@@ -9,7 +8,8 @@ class MainWindow : public QOpenGLWidget,
 
 public:
 	MainWindow();
-	
+    ~MainWindow();
+
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
@@ -23,6 +23,6 @@ protected:
     void wheelEvent(QWheelEvent* e) override;
 
 private:
-    QPointF pos;
-    Eigen::Affine3f T;
+    class UI;
+    const std::unique_ptr<UI> ui;
 };

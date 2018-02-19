@@ -1,12 +1,36 @@
 #include "MainWindow.h"
 #include <QtGui>
 #include <QDebug>
+#include <Eigen/Geometry>
+#include "ui_MainWindow.h"
 
 using namespace Eigen;
 
-MainWindow::MainWindow()
+class MainWindow::UI : public Ui::MainWindow
 {
-    T.matrix().setZero();
+public:
+    UI()
+    {
+        T.matrix().setZero();
+    }
+
+    QPointF pos;
+    Eigen::Affine3f T;
+};
+
+MainWindow::MainWindow()
+    : ui(new UI)
+{
+    ui->setupUi(this);
+    connect(ui->resetButton, &QPushButton::clicked, [this] {
+        initializeGL();
+        update();
+    });
+}
+
+MainWindow::~MainWindow()
+{
+
 }
 
 void MainWindow::initializeGL()
@@ -14,7 +38,7 @@ void MainWindow::initializeGL()
     initializeOpenGLFunctions();
     glClearColor(0, 0, 0, 0);
     glShadeModel(GL_SMOOTH);
-    if (!T(3, 3)) glEnable(GL_DEPTH_TEST);
+    if (!ui->T(3, 3)) glEnable(GL_DEPTH_TEST);
 
     const bool orth = true;
     glMatrixMode(GL_PROJECTION);
@@ -23,7 +47,7 @@ void MainWindow::initializeGL()
     else glFrustum(-1.0, 1.0, -1.0, 1.0, 1, 100);
     glMatrixMode(GL_MODELVIEW);
 
-    T = Translation3f(0, 0, -2.f);
+    ui->T = Translation3f(0, 0, -2.f);
 }
 
 void MainWindow::resizeGL(int w, int h)
@@ -45,7 +69,7 @@ void MainWindow::paintGL()
     }
 
     
-    glLoadMatrixf(T.data());
+    glLoadMatrixf(ui->T.data());
     glTranslatef(-0.5f, -0.5f, -0.5f);
 
     GLfloat data[8][3] = {
@@ -114,7 +138,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent* e)
 
 void MainWindow::mousePressEvent(QMouseEvent* e)
 {
-    pos = e->localPos();
+    ui->pos = e->localPos();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* e)
@@ -128,18 +152,18 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* e)
 
 void MainWindow::mouseMoveEvent(QMouseEvent* e)
 {
-    QPointF dp = e->localPos() - pos;
+    QPointF dp = e->localPos() - ui->pos;
     if (e->buttons() == Qt::LeftButton)
     {
         Vector3f axis(dp.y(), dp.x(), 0);
-        T.linear() = AngleAxisf(axis.norm() * 0.01f, axis.normalized()) * T.linear();
+        ui->T.linear() = AngleAxisf(axis.norm() * 0.01f, axis.normalized()) * ui->T.linear();
     }
     else if(e->buttons() == Qt::RightButton)
     {
         Vector3f dir(dp.x(), -dp.y(), 0);
-        T.translation() += dir * 0.01f;
+        ui->T.translation() += dir * 0.01f;
     }
-    pos = e->localPos();
+    ui->pos = e->localPos();
     update();
 }
 

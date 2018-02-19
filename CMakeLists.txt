@@ -3,6 +3,7 @@ project(CMakeQt)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
 #set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # set(ENV{Qt5_DIR} "C:\\Qt\\5.10.1\\msvc2017_64\\lib\\cmake")
 # find_package(Qt5 COMPONENTS Core Widgets Gui NO_CMAKE_PATH)

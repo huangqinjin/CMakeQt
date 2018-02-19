@@ -13,9 +13,11 @@ foreach(t Qt5::Core Qt5::Widgets Qt5::Gui)
     message(STATUS "***${LOC}***")
 endforeach()
 
+find_package(Eigen3 REQUIRED)
+
 set(SOURCE_FILES main.cpp MainWindow.cpp)
 file(GLOB HEADER_FILES *.h *.hpp)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES})
-target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets Qt5::Gui)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt5::Core Qt5::Widgets Qt5::Gui Eigen3::Eigen)
 #set_property(TARGET ${PROJECT_NAME} PROPERTY Qt5_NO_LINK_QTMAIN ON)

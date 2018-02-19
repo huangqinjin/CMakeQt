@@ -1,8 +1,8 @@
 #include <QOpenGLWindow>
-#include <QOpenGLFunctions>
+#include <QOpenGLFunctions_3_3_Compatibility>
 
 class MainWindow : public QOpenGLWindow,
-				   protected QOpenGLFunctions
+				   protected QOpenGLFunctions_3_3_Compatibility
 {
 	Q_OBJECT
 
@@ -11,5 +11,6 @@ public:
 	
 protected:
     void initializeGL() override;
+    void resizeGL(int w, int h) override;
     void paintGL() override;
 };

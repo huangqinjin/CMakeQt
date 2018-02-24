@@ -5,6 +5,7 @@
 #include <QDebug>
 #include <QQuickWindow>
 #include "MainWindow.h"
+#include "QuickRectangle.h"
 
 int widget(int argc, char* argv[]) 
 {
@@ -37,9 +38,11 @@ int quick(int argc, char* argv[])
     qDebug() << "QLibraryInfo::TestsPath             " << QLibraryInfo::location(QLibraryInfo::TestsPath);
     qDebug() << "QLibraryInfo::SettingsPath          " << QLibraryInfo::location(QLibraryInfo::SettingsPath);
 
+    qmlRegisterType<QuickRectangle>("HelloQuick", 1, 0, "Rectangle");	
+
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:///main.qml")));
-    
+
     QQuickWindow* const w = [&engine] {
         const auto& roots = engine.rootObjects();
         return roots.size() != 1 ? nullptr : qobject_cast<QQuickWindow*>(roots.front());

@@ -1,4 +1,5 @@
 #include <QOpenGLWidget>
+#include <QScopedPointer>
 #include <QOpenGLFunctions_3_3_Compatibility>
 
 class MainWindow : public QOpenGLWidget,
@@ -26,5 +27,5 @@ private:
     const bool orth;
 
     class UI;
-    const std::unique_ptr<UI> ui;
+    const QScopedPointer<UI> ui;
 };

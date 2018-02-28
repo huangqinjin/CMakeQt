@@ -18,13 +18,13 @@ public Q_SLOTS:
     void reset();
     void zoom(double value);
     void rotate(double value);
-    void mousePressEvent(QObject* e);
-    void mouseReleaseEvent(QObject* e);
-    void mouseMoveEvent(QObject* e);
-    void wheelEvent(QObject* e);
-
+ 
 private:
     Renderer* createRenderer() const override;
+    void mousePressEvent(QMouseEvent* e) override;
+    void mouseReleaseEvent(QMouseEvent* e) override;
+    void mouseMoveEvent(QMouseEvent* e) override;
+    void wheelEvent(QWheelEvent* e) override;
 
 private:
     const bool orth;

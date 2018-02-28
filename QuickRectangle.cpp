@@ -138,6 +138,7 @@ void main()
 
 QuickRectangle::QuickRectangle() : orth(true)
 {
+    setAcceptedMouseButtons(Qt::AllButtons);
     if (orth) projection.ortho(-1, 1, -1, 1, 1, 3 /* -1 */);
     else projection.frustum(-1.0, 1.0, -1.0, 1.0, 1, 100);
     reset();
@@ -186,39 +187,36 @@ void QuickRectangle::rotate(double value)
     update();
 }
 
-void QuickRectangle::mousePressEvent(QObject* e)
+void QuickRectangle::mousePressEvent(QMouseEvent* e)
 {
-    pos.setX(e->property("x").toReal());
-    pos.setY(e->property("y").toReal());
+    pos = e->localPos();
 }
 
-void QuickRectangle::mouseReleaseEvent(QObject* e)
+void QuickRectangle::mouseReleaseEvent(QMouseEvent* e)
 {
-    if (e->property("button").toInt() == Qt::MiddleButton)
+    if (e->button() == Qt::MiddleButton)
     {
         reset();
     }
 }
 
-void QuickRectangle::mouseMoveEvent(QObject* e)
+void QuickRectangle::mouseMoveEvent(QMouseEvent* e)
 {
-    QPointF pos(e->property("x").toReal(), e->property("y").toReal());
-    QPointF dp = pos - this->pos;
-    int buttons = e->property("buttons").toInt();
-    if (buttons == Qt::LeftButton)
+    QPointF dp = e->localPos() - this->pos;
+    if (e->buttons() == Qt::LeftButton)
     {
         Vector3f axis(dp.y(), dp.x(), 0);
         modelview.linear() = AngleAxisf(axis.norm() * 0.01f, axis.normalized()) * modelview.linear();
     }
-    else if(buttons == Qt::RightButton)
+    else if(e->buttons() == Qt::RightButton)
     {
         Vector3f dir(dp.x(), -dp.y(), 0);
         modelview.translation() += dir * 0.01f;
     }
-    this->pos = pos;
+    this->pos = e->localPos();
     update();
 }
 
-void QuickRectangle::wheelEvent(QObject* e)
+void QuickRectangle::wheelEvent(QWheelEvent* e)
 {
 }

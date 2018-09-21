@@ -27,14 +27,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen Qt5::Widgets Qt5::Qu
 
 
 if("${CMAKE_TOOLCHAIN_FILE}" MATCHES ".*vcpkg\.cmake$")
-	get_target_property(LOC Qt5::qmake LOCATION)
-	get_filename_component(LOC ${LOC} DIRECTORY)
-	if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-		set(LOC "${LOC}/qt_debug.conf")
-	else()
-		set(LOC "${LOC}/qt_release.conf")
-	endif()
-	configure_file("${LOC}" "${PROJECT_BINARY_DIR}/qt.conf")
 
 	if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
 		get_target_property(LOC Qt5::QuickControls2 IMPORTED_LOCATION_DEBUG)

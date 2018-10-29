@@ -24,16 +24,3 @@ set(RESOURCE_FILES qml.qrc)
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${HEADER_FILES} ${RESOURCE_FILES})
 target_link_libraries(${PROJECT_NAME} PRIVATE Eigen3::Eigen Qt5::Widgets Qt5::Quick Qt5::QuickControls2)
 #set_property(TARGET ${PROJECT_NAME} PROPERTY Qt5_NO_LINK_QTMAIN ON)
-
-
-if("${CMAKE_TOOLCHAIN_FILE}" MATCHES ".*vcpkg\.cmake$")
-
-	if("${CMAKE_BUILD_TYPE}" STREQUAL "Debug")
-		get_target_property(LOC Qt5::QuickControls2 IMPORTED_LOCATION_DEBUG)
-	else()
-		get_target_property(LOC Qt5::QuickControls2 IMPORTED_LOCATION_RELEASE)
-	endif()
-	file(COPY "${LOC}" DESTINATION "${PROJECT_BINARY_DIR}")
-	string(REPLACE "QuickControls2" "QuickTemplates2" LOC "${LOC}")
-	file(COPY "${LOC}" DESTINATION "${PROJECT_BINARY_DIR}")
-endif()

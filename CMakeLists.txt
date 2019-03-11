@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.9)
 project(CMakeQt)
 
+set(CMAKE_MAP_IMPORTED_CONFIG_RELWITHDEBINFO RelWithDebInfo Release "")
+set(CMAKE_MAP_IMPORTED_CONFIG_RELEASE Release RelWithDebInfo "")
+set(CMAKE_FIND_DEBUG_MODE ON)
+set(Boost_DEBUG ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)

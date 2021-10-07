@@ -1,0 +1,80 @@
+{
+  "version": 2,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "displayName": "Default Config",
+      "description": "Default config using Ninja generator",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/cmake-build-${presetName}"
+    },
+    {
+      "name": "windows",
+      "inherits": "default",
+      "displayName": "Windows x64 Config",
+      "description": "Target Windows with the Visual Studio development environment.",
+      "architecture": {
+        "value": "x64",
+        "strategy": "external"
+      },
+      "vendor": {
+        "microsoft.com/VisualStudioSettings/CMake/1.0": {
+          "hostOS": [
+            "Windows"
+          ]
+        }
+      },
+      "cacheVariables": {
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+      }
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "displayName": "Default Build",
+      "configurePreset": "default",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "windows-debug",
+      "inherits": "default",
+      "displayName": "Windows Debug Build",
+      "configuration": "Debug",
+      "configurePreset": "windows"
+    },
+    {
+      "name": "windows-release",
+      "inherits": "default",
+      "displayName": "Windows Release Build",
+      "configurePreset": "windows"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default",
+      "displayName": "Default Test",
+      "configurePreset": "default",
+      "configuration": "RelWithDebInfo",
+      "output": {
+        "verbosity": "verbose"
+      }
+    },
+    {
+      "name": "windows-debug",
+      "inherits": "default",
+      "displayName": "Windows Debug Test",
+      "configuration": "Debug"
+    },
+    {
+      "name": "windows-release",
+      "inherits": "default",
+      "displayName": "Windows Release Test"
+    }
+  ]
+}

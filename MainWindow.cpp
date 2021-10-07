@@ -164,9 +164,13 @@ void MainWindow::keyReleaseEvent(QKeyEvent* e)
 {
 }
 
+#if QT_VERSION_MAJOR < 6
+#define position localPos
+#endif
+
 void MainWindow::mousePressEvent(QMouseEvent* e)
 {
-    ui->pos = e->localPos();
+    ui->pos = e->position();
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* e)
@@ -180,7 +184,7 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* e)
 
 void MainWindow::mouseMoveEvent(QMouseEvent* e)
 {
-    QPointF dp = e->localPos() - ui->pos;
+    QPointF dp = e->position() - ui->pos;
     if (e->buttons() == Qt::LeftButton)
     {
         Vector3f axis(dp.y(), dp.x(), 0);
@@ -191,9 +195,11 @@ void MainWindow::mouseMoveEvent(QMouseEvent* e)
         Vector3f dir(dp.x(), -dp.y(), 0);
         ui->T.translation() += dir * 0.01f;
     }
-    ui->pos = e->localPos();
+    ui->pos = e->position();
     update();
 }
+
+#undef position
 
 void MainWindow::wheelEvent(QWheelEvent* e)
 {

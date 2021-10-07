@@ -187,9 +187,13 @@ void QuickRectangle::rotate(double value)
     update();
 }
 
+#if QT_VERSION_MAJOR < 6
+#define position localPos
+#endif
+
 void QuickRectangle::mousePressEvent(QMouseEvent* e)
 {
-    pos = e->localPos();
+    pos = e->position();
 }
 
 void QuickRectangle::mouseReleaseEvent(QMouseEvent* e)
@@ -202,7 +206,7 @@ void QuickRectangle::mouseReleaseEvent(QMouseEvent* e)
 
 void QuickRectangle::mouseMoveEvent(QMouseEvent* e)
 {
-    QPointF dp = e->localPos() - this->pos;
+    QPointF dp = e->position() - this->pos;
     if (e->buttons() == Qt::LeftButton)
     {
         Vector3f axis(dp.y(), dp.x(), 0);
@@ -213,9 +217,11 @@ void QuickRectangle::mouseMoveEvent(QMouseEvent* e)
         Vector3f dir(dp.x(), -dp.y(), 0);
         modelview.translation() += dir * 0.01f;
     }
-    this->pos = e->localPos();
+    this->pos = e->position();
     update();
 }
+
+#undef position
 
 void QuickRectangle::wheelEvent(QWheelEvent* e)
 {
